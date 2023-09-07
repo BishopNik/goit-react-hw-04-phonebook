@@ -22,7 +22,7 @@ function App() {
 					{ id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
 				];
 		} catch (error) {
-			toast.error(`Error initialization : ${error}`, {
+			toast.error(`Error initialization: ${error}`, {
 				position: 'top-right',
 				autoClose: 5000,
 				hideProgressBar: false,
