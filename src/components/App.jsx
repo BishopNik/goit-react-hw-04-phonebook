@@ -1,13 +1,14 @@
 /** @format */
 
 import { useEffect, useState } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
 import { nanoid } from 'nanoid';
 import Filter from './filter';
 import ContactList from './contact';
 import ContactForm from './forms';
 import './style.css';
 
-function App({ name, number }) {
+function App() {
 	const [contacts, setContacts] = useState(() => {
 		try {
 			const savedContacts = JSON.parse(localStorage.getItem('contacts'));
@@ -21,7 +22,22 @@ function App({ name, number }) {
 					{ id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
 				];
 		} catch (error) {
-			console.log('🚀', error);
+			toast.error(`Error initialization : ${error}`, {
+				position: 'top-right',
+				autoClose: 5000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+				progress: undefined,
+				theme: 'colored',
+			});
+			return [
+				{ id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
+				{ id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
+				{ id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
+				{ id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
+			];
 		}
 	});
 	const [filter, setFilter] = useState('');
@@ -76,6 +92,8 @@ function App({ name, number }) {
 			<Filter onFiltred={handlerOnFitred} value={filter} />
 
 			<ContactList contacts={filteredContacts} onDeleteContact={handleDelClick} />
+
+			<ToastContainer position='top-right' autoClose={5000} hideProgressBar={false} />
 		</div>
 	);
 }
