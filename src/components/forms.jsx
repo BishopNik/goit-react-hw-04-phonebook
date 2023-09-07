@@ -36,10 +36,8 @@ function ContactForm({ contacts, onSubmitForm }) {
 	const handleSubmit = e => {
 		e.preventDefault();
 
-		const validateObj = { name: name, number: number };
-
 		schema
-			.validate(validateObj)
+			.validate({ name, number })
 			.then(() => {
 				const checkName = contacts.find(
 					contact => contact.name.toLowerCase() === name.toLowerCase()
