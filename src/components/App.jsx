@@ -1,6 +1,7 @@
 /** @format */
 
 import { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import { ToastContainer, toast } from 'react-toastify';
 import { nanoid } from 'nanoid';
 import Filter from './filter';
@@ -97,5 +98,10 @@ function App() {
 		</div>
 	);
 }
+
+App.propTypes = {
+	name: PropTypes.string,
+	number: PropTypes.string,
+};
 
 export default App;
