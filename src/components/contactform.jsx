@@ -7,7 +7,7 @@ import * as yup from 'yup';
 import './style.css';
 import 'react-toastify/dist/ReactToastify.css';
 
-function ContactForm({ contacts, onSubmitForm }) {
+function ContactForm({ onSubmitForm }) {
 	const [name, setName] = useState('');
 	const [number, setNumber] = useState('');
 
@@ -40,16 +40,9 @@ function ContactForm({ contacts, onSubmitForm }) {
 		schema
 			.validate({ name, number })
 			.then(() => {
-				const checkName = contacts.find(
-					contact => contact.name.toLowerCase() === name.toLowerCase()
-				);
-				if (checkName) {
-					alert(`${checkName.name} is already in contacts.`);
-					return;
-				}
-				onSubmitForm({ name, number });
-				setName('');
-				setNumber('');
+				const res = onSubmitForm({ name, number });
+				setName(res.name);
+				setNumber(res.number);
 			})
 			.catch(validationErrors => {
 				toast.error(`Error: ${validationErrors.errors}`, {
@@ -106,13 +99,6 @@ function ContactForm({ contacts, onSubmitForm }) {
 }
 
 ContactForm.propTypes = {
-	contacts: PropTypes.arrayOf(
-		PropTypes.exact({
-			id: PropTypes.string.isRequired,
-			name: PropTypes.string.isRequired,
-			number: PropTypes.string.isRequired,
-		})
-	).isRequired,
 	onSubmitForm: PropTypes.func.isRequired,
 };
 

@@ -5,8 +5,8 @@ import PropTypes from 'prop-types';
 import { ToastContainer, toast } from 'react-toastify';
 import { nanoid } from 'nanoid';
 import Filter from './filter';
-import ContactList from './contact';
-import ContactForm from './forms';
+import ContactList from './contactlist';
+import ContactForm from './contactform';
 import './style.css';
 
 function App() {
@@ -67,6 +67,23 @@ function App() {
 	}
 
 	const handleAddContact = ({ name, number }) => {
+		const checkName = contacts.find(
+			contact => contact.name.toLowerCase() === name.toLowerCase()
+		);
+		if (checkName) {
+			toast.error(`${checkName.name} is already in contacts.`, {
+				position: 'top-right',
+				autoClose: 5000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+				progress: undefined,
+				theme: 'colored',
+			});
+			return { name, number };
+		}
+
 		setContacts(contacts => [
 			...contacts,
 			{
@@ -75,6 +92,7 @@ function App() {
 				number,
 			},
 		]);
+		return { name: '', number: '' };
 	};
 
 	const handleDelClick = e => {
@@ -86,7 +104,7 @@ function App() {
 		<div className='container'>
 			<h1 className='title-name'>Phonebook</h1>
 
-			<ContactForm onSubmitForm={handleAddContact} contacts={contacts} />
+			<ContactForm onSubmitForm={handleAddContact} />
 
 			<h2 className='title-name'>Contacts</h2>
 
