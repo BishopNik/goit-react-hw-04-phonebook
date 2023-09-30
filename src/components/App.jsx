@@ -1,66 +1,40 @@
 /** @format */
 
 import { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import { nanoid } from 'nanoid';
 import Filter from './filter';
 import ContactList from './contactlist';
 import ContactForm from './contactform';
+import toastWindow from './toastwindow.js';
 import './style.css';
+
+const DEFAULTCONTACTS = [
+	{ id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
+	{ id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
+	{ id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
+	{ id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
+];
 
 function App() {
 	const [contacts, setContacts] = useState(() => {
 		try {
 			const savedContacts = JSON.parse(localStorage.getItem('contacts'));
-			if (savedContacts) {
-				return savedContacts;
-			} else
-				return [
-					{ id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-					{ id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-					{ id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-					{ id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-				];
+			return savedContacts ?? DEFAULTCONTACTS;
 		} catch (error) {
-			toast.error(`Error initialization: ${error}`, {
-				position: 'top-right',
-				autoClose: 5000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-				progress: undefined,
-				theme: 'colored',
-			});
-			return [
-				{ id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-				{ id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-				{ id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-				{ id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-			];
+			toastWindow(`Error initialization: ${error}`);
+			return DEFAULTCONTACTS;
 		}
 	});
 	const [filter, setFilter] = useState('');
-	const [filteredContacts, setFiltredContacts] = useState(contacts);
-	const [isFirstRender, setIsFilterRender] = useState(true);
 
 	useEffect(() => {
-		if (isFirstRender) {
-			setIsFilterRender(false);
-			return;
-		}
 		localStorage.setItem('contacts', JSON.stringify(contacts));
-	}, [contacts, isFirstRender]);
+	}, [contacts]);
 
-	useEffect(() => {
-		const filteredContacts = contacts.filter(contact => {
-			const searchName = contact.name.toLowerCase();
-			const filterName = filter.toLowerCase();
-			return searchName.includes(filterName);
-		});
-		setFiltredContacts(filteredContacts);
-	}, [filter, contacts]);
+	const filteredContacts = contacts.filter(contact =>
+		contact.name.toLowerCase().includes(filter.toLowerCase())
+	);
 
 	function handlerOnFitred({ target }) {
 		setFilter(target.value);
@@ -71,16 +45,7 @@ function App() {
 			contact => contact.name.toLowerCase() === name.toLowerCase()
 		);
 		if (checkName) {
-			toast.error(`${checkName.name} is already in contacts.`, {
-				position: 'top-right',
-				autoClose: 5000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-				progress: undefined,
-				theme: 'colored',
-			});
+			toastWindow(`${checkName.name} is already in contacts.`);
 			return { name, number };
 		}
 
@@ -116,10 +81,5 @@ function App() {
 		</div>
 	);
 }
-
-App.propTypes = {
-	name: PropTypes.string,
-	number: PropTypes.string,
-};
 
 export default App;
